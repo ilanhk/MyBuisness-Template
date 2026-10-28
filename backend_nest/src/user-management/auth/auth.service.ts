@@ -19,6 +19,7 @@ import { ForgotPasswordDto } from "./dto/forgot-password.dto";
 import { LoginDto } from "./dto/login.dto";
 import { RegisterDto } from "./dto/register.dto";
 import { ResetPasswordDto } from "./dto/reset-password.dto";
+import { sendEmail } from "../../messages-management/mail/send-email";
 
 const ACCESS_TOKEN_EXPIRES_IN = "15m" as const;
 const REFRESH_TOKEN_EXPIRES_IN = "3d" as const;
@@ -150,24 +151,13 @@ export class AuthService {
 
     const baseUrl = this.config.get<string>("BASE_URL");
     const resetUrl = `${baseUrl}/reset-password/${resetToken}`;
-    const transporter = nodemailer.createTransport({
-      host: "smtp.office365.com",
-      port: 465,
-      secure: true,
-      auth: {
-        user: this.config.get<string>("OUTLOOK_EMAIL"),
-        pass: this.config.get<string>("OUTLOOK_PASSWORD"),
-      },
-      tls: { rejectUnauthorized: true },
-    });
-
-    await transporter.sendMail({
-      to: user.email,
-      from: this.config.get<string>("OUTLOOK_EMAIL"),
-      subject: "Password Reset Request",
-      text: `Please use this link to reset your password: ${resetUrl}`,
-    });
-
+    
+    await sendEmail(
+      email,
+      "Password Reset",
+      `You requested a password reset. Click the link to reset your password: ${resetUrl}`,
+    );
+    
     return response;
   }
 

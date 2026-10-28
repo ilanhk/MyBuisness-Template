@@ -31,13 +31,14 @@ import { TasksStatusesModule } from './task-management/tasks-statuses/tasks-stat
 import { TaskCommentsModule } from './task-management/task-comments/task-comments.module';
 import { TeamMembersModule } from './task-management/team-members/team-members.module';
 import { TaskAttachmentsModule } from './task-management/task-attachments/task-attachments.module';
-import { AutomatedMessagesModule } from './automated-messages/automated-messages.module';
+import { AutomatedMessagesModule } from './messages-management/automated-messages/automated-messages.module';
 import { DepartmentModule } from './company-management/department/department.module';
 import { SubdepartmentModule } from './subdepartment/subdepartment.module';
 import { RolesModule } from './roles/roles.module';
 import { SuppliersModule } from './product-management/suppliers/suppliers.module';
 import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 import { SubscriptionInvoicesModule } from './subscription-invoices/subscription-invoices.module';
+import { MailModule } from './messages-management/mail/mail.module';
 
 @Module({
   imports: [
@@ -79,6 +80,7 @@ import { SubscriptionInvoicesModule } from './subscription-invoices/subscription
     SuppliersModule,
     SubscriptionsModule,
     SubscriptionInvoicesModule,
+    MailModule,
   ],
 })
 export class AppModule {}

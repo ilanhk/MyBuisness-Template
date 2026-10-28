@@ -6,6 +6,7 @@ import { RolesGuard } from '../auth/guards/roles.guard';
 import { AppUser } from './user.entity';
 import { UsersService } from './users.service';
 import { toAdminResponse, toProfileResponse } from './user-response';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -34,21 +35,21 @@ export class UsersController {
   @Post('create')
   @UseGuards(AccessTokenGuard, RolesGuard)
   @Roles('admin')
-  async createUser(@Body() body: Record<string, unknown>) {
-    const email = typeof body.email === 'string' ? body.email : '';
-    if (email && await this.users.findByEmail(email)) {
-      throw new ConflictException({ message: 'User already exists' });
-    }
-    const user = await this.users.create({
-      firstName: String(body.firstName ?? ''),
-      lastName: String(body.lastName ?? ''),
-      email,
-      password: String(body.password ?? ''),
-      isEmployee: Boolean(body.isEmployee),
-      inEmailList: Boolean(body.inEmailList),
-    });
-    return toAdminResponse(user);
-  }
+  async createUser(@Body() body: CreateUserDto) {
+  const user = await this.users.create({
+    firstName: body.firstName,
+    lastName: body.lastName,
+    email: body.email,
+    password: body.password,
+    role: body.role,
+    companyId: body.companyId,
+    departmentId: body.departmentId,
+    inEmailList: body.inEmailList,
+  });
+
+  return toAdminResponse(user);
+}
+
 
   @Get(':id')
   @UseGuards(AccessTokenGuard)

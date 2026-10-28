@@ -1,0 +1,45 @@
+enum AccessResource {
+USERS
+PRODUCTS
+SUPPLIERS
+ORDERS
+TASKS
+MESSAGE_TEMPLATES
+
+@@map("access_resource")
+}
+
+enum Role {
+  SUPER_ADMIN @map("super_admin")
+  ADMIN       @map("admin")
+  MANAGER     @map("manager")
+  EMPLOYEE    @map("employee")
+  USER        @map("user")
+
+  @@map("role")
+}
+
+model DepartmentPermission {
+  id           String         @id @default(uuid()) @db.Uuid
+  departmentId String         @map("department_id") @db.Uuid
+  role         Role
+  resource     AccessResource
+
+  canView      Boolean        @default(false) @map("can_view")
+  canCreate    Boolean        @default(false) @map("can_create")
+  canUpdate    Boolean        @default(false) @map("can_update")
+  canDelete    Boolean        @default(false) @map("can_delete")
+
+  department Department @relation(
+    fields: [departmentId],
+    references: [id],
+    onDelete: Cascade
+  )
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@unique([departmentId, role, resource])
+  @@index([departmentId, role, resource])
+  @@map("department_permissions")
+}
